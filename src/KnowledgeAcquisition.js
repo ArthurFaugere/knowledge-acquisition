@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 import logo from './logo.svg';
 import './KnowledgeAcquisition.css';
 import './bootstrap.min.css';
@@ -73,8 +74,27 @@ function Footer() {
 	</div>);
 }
 
-function KnowledgeAcquisition({turnData, highlight, onAnswerSelected, onContinue}) {
-  return (
+function mapStateToProps(state) {
+	return {
+		turnData: state.turnData,
+		highlight: state.highlight
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		onAnswerSelected: (answer) => {
+			dispatch({type: 'ANSWER_SELECTED', answer});
+		},
+		onContinue: () => {
+			dispatch({type: 'CONTINUE'});
+		}
+	};
+}
+
+const KnowledgeAcquisition = connect(mapStateToProps, mapDispatchToProps)(
+	function ({turnData, highlight, onAnswerSelected, onContinue}) {
+		return (
 	    <div className="container-fluid">
 	    	<Hero />
 	    	<Turn {...turnData} highlight={highlight} onAnswerSelected={onAnswerSelected} />
@@ -82,8 +102,8 @@ function KnowledgeAcquisition({turnData, highlight, onAnswerSelected, onContinue
 	    	<p><Link to="/add">Add an author</Link></p>
 	    	<Footer />
 	    </div>
-  );
-}
+		);
+})
 
 
 export default KnowledgeAcquisition;
